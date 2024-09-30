@@ -11,12 +11,24 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/Yapanyushin/tabeo-challenge/api/proto"
 	web "github.com/Yapanyushin/tabeo-challenge/internal/ui/pack_calculator"
 )
 
 func uiCommand(_ *cobra.Command, _ []string) {
-	srv := web.NewServer(os.Getenv("API_URL"), os.Getenv("CLIENT_PORT"))
+
+	// Set up a connection to the server
+	conn, err := grpc.NewClient(os.Getenv("API_URL"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("cant establish connection %s", err.Error())
+	}
+
+	defer conn.Close()
+
+	srv := web.NewServer(proto.NewPackCalculatorClient(conn), os.Getenv("CLIENT_PORT"))
 
 	go func() {
 		log.Println("starting service on address", srv.Server.Addr)

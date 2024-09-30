@@ -6,12 +6,10 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/Yapanyushin/tabeo-challenge/api/proto"
 )
@@ -27,14 +25,14 @@ type PageData struct {
 }
 
 type HttpServer struct {
-	apiHost string
-	Server  *http.Server
+	packClient proto.PackCalculatorClient
+	Server     *http.Server
 }
 
-func NewServer(apiHost, port string) *HttpServer {
+func NewServer(apiClient proto.PackCalculatorClient, port string) *HttpServer {
 	mux := http.NewServeMux()
 	srv := &HttpServer{
-		apiHost: apiHost,
+		packClient: apiClient,
 	}
 
 	mux.HandleFunc("/", srv.homeHandler)
@@ -84,23 +82,20 @@ func (s HttpServer) calculateHandler(w http.ResponseWriter, r *http.Request) {
 	orderQuantityStr := r.FormValue("orderQuantity")
 	orderQuantity, err := strconv.Atoi(orderQuantityStr)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Set up a connection to the server
-	conn, err := grpc.NewClient(s.apiHost, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+	if orderQuantity > math.MaxInt32 {
+		err = fmt.Errorf("order Quantity cannot be more than %d", math.MaxInt32)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	defer conn.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	resp, err := proto.NewPackCalculatorClient(conn).CalculatePack(ctx, &proto.CalculatePacksAmountRequest{Items: int32(orderQuantity)})
+	resp, err := s.packClient.CalculatePack(ctx, &proto.CalculatePacksAmountRequest{Items: int32(orderQuantity)})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
