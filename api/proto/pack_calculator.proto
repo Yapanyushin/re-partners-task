@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package github.com.yapanyushin.pack_calculator;
+
+option go_package = "github.com/yapanyushin/re-partners-challenge/internal/server/pack-calculator";
+
+service PackCalculator {
+  // Calculates Pack according to provided list of possible packings
+  rpc CalculatePack(CalculatePacksAmountRequest) returns (CalculatePacksAmountResponse);
+}
+
+message CalculatePacksAmountRequest {
+  int32 items = 1;
+}
+
+message CalculatePacksAmountResponse {
+  repeated PacksAmount packs = 1;
+}
+
+message PacksAmount {
+  int32 size = 1;
+  int32 amount = 2;
+}

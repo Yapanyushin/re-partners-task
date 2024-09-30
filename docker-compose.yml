@@ -1,0 +1,12 @@
+version: '3'
+services:
+  pack-calculator-server:
+    volumes:
+      - ./config.yaml:/app/cmd/pack_calculator/bin/pack_calculator/config.yaml
+    env_file:
+      - .env
+    build: .  # Build the image from the Dockerfile in the current directory
+    command: ./cmd/pack_calculator/bin/pack_calculator/pack_calculator serve  # Execute the 'serve' command within the container
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}  # Expose port 20000 from the container to the host
+    restart: always # Automatically restart the container on failure
