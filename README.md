@@ -15,9 +15,27 @@ This Golang application calculates the optimal number of packs to ship to custom
 
 ## Getting Started with Docker Compose
 
- **Build and run with Docker Compose:** 
- ```bash
- docker-compose up --build
+**Prerequisites**
+
+* **Configure Environment Variables:** Before building, create a `.env` file in the project root with the following content:
+
+```
+SERVER_PORT=20000
+CLIENT_PORT=9090
+```
+
+* **Configure Pack Sizes:** Create a `config.yaml` file in the project root with the desired pack sizes:
+
+```yaml
+pack_sizes:
+  - 500
+  - 900
+```
+
+**Build and run with Docker Compose:**
+
+```bash
+docker-compose up --build
 ```
 
 This will:
@@ -26,16 +44,20 @@ This will:
 * Start the gRPC server container.
 * Start the UI client container.
 
-4. **Access the UI:** Open your web browser and navigate to `http://localhost:8080` (or the port specified in your `docker-compose.yml`).
+**Access the UI:** Open your web browser and navigate to `http://localhost:9090` (or the port specified in your `docker-compose.yml` under `CLIENT_PORT`).
 
 ## Configuration
 
-* **Pack Sizes:** Modify the `packSizes` array in the configuration file or database to adjust available pack sizes.
-
+* **Pack Sizes:** Modify the `pack_sizes` list in the `config.yaml` file to customize the available pack sizes.
 
 ## Testing
 
 * **Unit Tests:** Run the unit tests using
+
 ```bash
-  go test ./...
+go test ./...
 ```
+
+**Important:** Ensure you have Docker and Docker Compose installed on your system before running the application.
+
+Please let me know if you have any other questions or requests. 

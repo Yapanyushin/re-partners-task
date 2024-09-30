@@ -48,6 +48,7 @@ func TestNewPackCalculator(t *testing.T) {
 			pc, err := NewPackCalculator(tc.packSizes)
 			if tc.expectedErr {
 				assert.Error(t, err)
+				return
 			} else {
 				assert.NoError(t, err)
 			}

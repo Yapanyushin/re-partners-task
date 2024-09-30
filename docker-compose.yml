@@ -10,3 +10,16 @@ services:
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}  # Expose port 20000 from the container to the host
     restart: always # Automatically restart the container on failure
+  ui-client:
+      build: . # Assuming your TypeScript/HTML code is in a 'ui' subdirectory
+      command: ./cmd/pack_calculator/bin/pack_calculator/pack_calculator ui
+      volumes:
+        - ./assets :/app/cmd/pack_calculator/bin/pack_calculator/assets
+      env_file:
+        - .env
+      environment:
+        - API_URL=pack-calculator-server:${SERVER_PORT}
+      ports:
+        - ${CLIENT_PORT}:${CLIENT_PORT}   # Expose the UI client on port 8080
+      depends_on:
+        - pack-calculator-server  # Ensure the gRPC server starts first

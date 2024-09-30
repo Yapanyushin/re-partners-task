@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
+	"github.com/Yapanyushin/tabeo-challenge/api/proto"
 	"github.com/Yapanyushin/tabeo-challenge/internal/app"
 	"github.com/Yapanyushin/tabeo-challenge/internal/server/pack_calculator"
 )
@@ -31,7 +32,7 @@ func serveCommand(_ *cobra.Command, _ []string) {
 		log.Fatalf("app.NewPackCalculator error: %s", err.Error())
 	}
 
-	pack_calculator.RegisterPackCalculatorServer(s, pack_calculator.NewServer(pc))
+	proto.RegisterPackCalculatorServer(s, pack_calculator.NewServer(pc))
 
 	healthpb.RegisterHealthServer(s, health.NewServer())
 

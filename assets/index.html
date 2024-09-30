@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pack Calculator</title>
+</head>
+<body>
+<h1>Calculate Packs</h1>
+<form method="POST" action="/calculate">
+    <label for="orderQuantity">Order Quantity:</label>
+    <input type="number" id="orderQuantity" name="orderQuantity" value={{.OrderQuantity}} required><br><br>
+    <input type="submit" value="Calculate">
+</form>
+
+{{if .Error}}
+<p style="color: red;">{{.Error}}</p>
+{{else if .Packs}}
+<h2>Results</h2>
+<ul>
+    {{.OrderQuantity}}
+    {{range .Packs}}
+    <li>{{.Amount}} packs of size {{.Size}}</li>
+    {{end}}
+</ul>
+{{end}}
+</body>
+</html>

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package github.com.yapanyushin.pack_calculator;
+package github.com.yapanyushin.proto;
 
-option go_package = "github.com/yapanyushin/re-partners-challenge/internal/server/pack-calculator";
+option go_package = "github.com/yapanyushin/re-partners-challenge/api/proto";
 
 service PackCalculator {
   // Calculates Pack according to provided list of possible packings

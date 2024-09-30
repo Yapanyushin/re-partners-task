@@ -27,8 +27,15 @@ func main() {
 		Run:   serveCommand,
 	}
 
+	cmdUI := &cobra.Command{
+		Use:   "ui",
+		Short: "Starts grpc service",
+		Run:   uiCommand,
+	}
+
 	rootCmd.AddCommand(
 		cmdServe,
+		cmdUI,
 	)
 
 	if err := rootCmd.Execute(); err != nil {

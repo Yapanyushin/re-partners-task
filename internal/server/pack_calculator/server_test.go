@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/Yapanyushin/tabeo-challenge/api/proto"
 	"github.com/Yapanyushin/tabeo-challenge/internal/app"
 	"github.com/Yapanyushin/tabeo-challenge/internal/app/mocks"
 )
@@ -14,14 +15,14 @@ func TestCalculatePack(t *testing.T) {
 
 	testCases := []struct {
 		name            string
-		request         *CalculatePacksAmountRequest
-		expected        *CalculatePacksAmountResponse
+		request         *proto.CalculatePacksAmountRequest
+		expected        *proto.CalculatePacksAmountResponse
 		expectErr       bool
 		mockExpectation func(m *mocks.PackCalculator_Expecter)
 	}{
 		{
 			name: "Valid request",
-			request: &CalculatePacksAmountRequest{
+			request: &proto.CalculatePacksAmountRequest{
 				Items: 501,
 			},
 			mockExpectation: func(m *mocks.PackCalculator_Expecter) {
@@ -29,20 +30,20 @@ func TestCalculatePack(t *testing.T) {
 					{Size: 500, Amount: 1}, {Size: 250, Amount: 1},
 				})
 			},
-			expected: &CalculatePacksAmountResponse{
-				Packs: []*PacksAmount{{Size: 500, Amount: 1}, {Size: 250, Amount: 1}},
+			expected: &proto.CalculatePacksAmountResponse{
+				Packs: []*proto.PacksAmount{{Size: 500, Amount: 1}, {Size: 250, Amount: 1}},
 			},
 		},
 		{
 			name: "Zero items",
-			request: &CalculatePacksAmountRequest{
+			request: &proto.CalculatePacksAmountRequest{
 				Items: 0,
 			},
 			expectErr: true,
 		},
 		{
 			name: "Negative items",
-			request: &CalculatePacksAmountRequest{
+			request: &proto.CalculatePacksAmountRequest{
 				Items: -10,
 			},
 			expectErr: true,
